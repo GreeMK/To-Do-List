@@ -1,0 +1,184 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100vh;
+}
+
+.container__createtask {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.container__listask {
+    display: grid;
+    grid-template-areas: "h1 h1"
+                        "filter filter"
+                        "tasklist tasklist";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    justify-items: center;
+}
+
+#divCategory {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+h1 {
+    font-family: "Bebas Neue", sans-serif;;
+    size: 21px;
+    grid-area: h1;
+    letter-spacing: 1px;
+}
+
+#add-task {
+    font-size: 17px;
+    width: 15vw;
+    height: 2.5vh;
+    border-radius: 5px;
+}
+
+#description {
+    width: 15vw;
+}
+
+#task-list {
+    width: 100%;
+    min-width: 300px;
+    margin-top: 20px;
+    grid-area: tasklist;
+}
+
+.task {
+    width: 100%;
+    min-height: 50px;
+    font-size: 25px;
+    padding: 10px;
+    margin-top: 10px;
+    color: white;
+    background-color: #407ba6;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.task.completada {
+    text-decoration: line-through;
+    background-color: black;
+    border: none;
+}
+
+.task a {
+    max-width: 350px;
+    text-decoration: none;
+    color: white;
+    transition: all .1s;
+}
+
+.task a:hover {
+    color: whitesmoke
+}
+
+i {
+    margin: 5px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.icon-complete {
+    color: rgb(0, 255, 0);
+}
+
+.icon-deleted {
+    color: rgb(255,255,255);
+}
+
+.icon-complete:hover,
+.icon-deleted:hover {
+    background-color: rgba(255, 255, 255, 0.523);
+}
+
+.modal {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    inset: 0; /* es lo mismo que: top: 0; bottom: 0; right: 0; left: 0; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(209, 202, 202, 0.8);
+    transition: all .4s;
+}
+
+.modal-content {
+    padding: 20px;
+    position:relative;
+    width: 500px;
+    height: auto;
+    background: #fff;
+    border-radius: 3px;
+    box-shadow: 0 0 15px rgba(0 0 0 / .15);
+    color: black;
+   
+}
+
+.modal-content h2 {
+    margin-top: 20px;
+}
+
+.modal-content h3 {
+    margin-top: 15px 0;
+}
+
+.modal-content h3, .estado {
+    display: inline;
+}
+.modal-content p {
+    margin: 20px 0;
+    text-align: left;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 40px;
+    width: 30px;
+    height: 30px;
+    background: rgba(0 0 0 / .1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ff33008e;
+}
+
+.close-btn a {
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 20px;
+}
+
+.close-btn a:hover {
+    color: orangered;
+}
+
+.modal:target{
+    visibility: visible;
+    opacity: 1;
+}
+
