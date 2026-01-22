@@ -4,8 +4,9 @@ const nameTask = document.getElementById('add-task');
 const descriptionn = document.getElementById('description');
 const category = document.getElementById('category');
 const buttonAdd =  document.querySelector('button');
-const taskList = document.getElementById('task-list')
+
 const agregarCategoria = document.getElementById('Agregar-Categoria')
+
 
 
 // Esta función sirve para poder crear un elemento visual de una tarea
@@ -21,45 +22,9 @@ function addTask (){
             return;
         };
 
-        // Genero contenedor de tarea
-        let newTask = document.createElement('div');
-        newTask.classList.add('task');
-
-        const taskID = Date.now();
-        newTask.dataset.id = taskID;
-
-        // Genero el nombre de la tarea y lo agrego al contenedor   
-        let refe = document.createElement('a')
-        refe.href='#myModal'
-        refe.textContent = name;
-        newTask.appendChild(refe)
-        
-
-        // Genero el contenedor de icono y lo agrego al contenedor tarea
-        let icons = document.createElement('div')
-        icons.classList.add()
-        newTask.appendChild(icons)
-
-        let state = 'incompleto'
-        // Iconos
-        let complete = document.createElement('i')
-        complete.classList.add('bi', 'bi-check', 'icon-complete')
-        complete.addEventListener('click', completeTask);
-        
-
-        let deleted = document.createElement('i')
-        deleted.classList.add('bi', 'bi-x', 'icon-deleted')
-        deleted.addEventListener('click', deletedTask)
-
-        icons.append(complete, deleted)
-
-        taskList.appendChild(newTask);
-
         createTask(name, description, selectedCategory )
-        
+        renderList(taskArray)
 
-        addPopUp(name, description, state, selectedCategory,newTask)
-        
         nameTask.value = "";
         descriptionn.value = "" ;
     };
@@ -138,9 +103,10 @@ function completeTask(e) {
         if (tarea.stateElement) {
             tarea.stateElement.innerText = tarea.state
         }
-    };
 
-    task.classList.toggle('completada')
+        // Re-renderizar para aplicar clases correctamente
+        renderList(taskArray);
+    };
 }
 
 // Esta función sirve para borrar el elemento visual de la tarea
@@ -151,7 +117,11 @@ function deletedTask(e) {
 
     let tarea = taskArray.find(t => t.id === taskID)
 
-    taskArray.splice(tarea)
+    if (tarea) {
+        const index = taskArray.indexOf(tarea);
+        taskArray.splice(index, 1);
+    }
+
     task.remove()
 }
 
@@ -165,10 +135,80 @@ function crearCategoria(e) {
         newOption.textContent = titulo;                             // Y un texto
         
         category.appendChild(newOption)
+        fillCategoryFilter(titulo)
     };
 }
 
+function fillCategoryFilter(nameCategory){
+    let catOption = document.createElement('option')
+    catOption.value = nameCategory.toLowerCase()
+    catOption.textContent = nameCategory
 
+    document.getElementById('filter-category').appendChild(catOption)
+}
+
+const renderList = (taskToShow) => {
+    const taskList = document.getElementById('task-list')
+
+    taskList.innerHTML = ""
+
+    taskToShow.forEach(task => {
+        // Genero contenedor de tarea
+        let newTask = document.createElement('div');
+        newTask.classList.add('task');
+
+        newTask.dataset.id = task.id;
+
+        // Genero el nombre de la tarea y lo agrego al contenedor   
+        let refe = document.createElement('a')
+        refe.href='#myModal'
+        refe.textContent = task.name;
+        newTask.appendChild(refe)
+
+        // Genero el contenedor de icono y lo agrego al contenedor tarea
+        let icons = document.createElement('div')
+        icons.classList.add()
+        newTask.appendChild(icons)
+
+        // Iconos
+        let complete = document.createElement('i')
+        complete.classList.add('bi', 'bi-check', 'icon-complete')
+        complete.addEventListener('click', completeTask);
+        
+
+        let deleted = document.createElement('i')
+        deleted.classList.add('bi', 'bi-x', 'icon-deleted')
+        deleted.addEventListener('click', deletedTask)
+
+        icons.append(complete, deleted)
+
+        // Aplicar clase completada si el estado es completado
+        if (task.state === 'completado') {
+            newTask.classList.add('completada')
+        }
+
+        taskList.appendChild(newTask)
+        addPopUp(task.name, task.description, task.state, task.category, newTask)
+    });
+
+}
+
+const filterTask = () => {
+    const categoryFilter = document.getElementById('filter-category').value;
+    const stateFilter = document.getElementById('filter-state').value;
+
+    let taskToShow = taskArray.filter(task => {
+        const categoryMatch = categoryFilter === "" || task.category === categoryFilter;
+        const stateMatch = stateFilter === "" || task.state === stateFilter;
+
+        return categoryMatch && stateMatch;
+    });
+
+   renderList(taskToShow);
+}
 buttonAdd.addEventListener('click', addTask)
 
 agregarCategoria.addEventListener('click', crearCategoria)
+
+document.getElementById('filter-category').addEventListener('change', filterTask)
+document.getElementById('filter-state').addEventListener('change', filterTask)
