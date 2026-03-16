@@ -1,34 +1,52 @@
-let categoryList = [];
+/*
+ * categoryTasks.js
+ *
+ * Shared in-memory collections and helpers for tasks and categories.
+ * The global arrays are kept as const bindings and given clear, English
+ * names. Functions validate their arguments and avoid unnecessary loops.
+ */
 
-let taskArray = [];
 
-function createTask(titulo, descripcion, categoria){
-    const nuevaTarea = {
+// categories are stored normalized (lowercase, trimmed)
+const categories = [];
+// tasks created via createTask
+const tasks = [];
+
+/**
+ * Add a new task object to the `tasks` array.
+ *
+ * @param {string} title
+ * @param {string} description
+ * @param {string} category
+ */
+function createTask(title, description, category) {
+    const newTask = {
         id: Date.now(),
-        name: titulo,
-        category: categoria,
-        description: descripcion,
+        name: title,
+        category,
+        description,
         state: "incompleto"
     };
-    taskArray.push(nuevaTarea);
-};
+    tasks.push(newTask);
+}
 
-
-
-function addCategory(nombre){
-    if (nombre === "") {
-        alert("No puede dejar el campo vacio")
+/**
+ * Register a new category if it doesn't already exist and is non-empty.
+ * Returns true when the category was added; false otherwise.
+ *
+ * @param {string} name
+ * @returns {boolean}
+ */
+function addCategory(name) {
+    const normalized = name.trim().toLowerCase();
+    if (!normalized) {
+        alert("No puede dejar el campo vacio");
         return false;
-    };
-
-    for (let i = 0; i < categoryList.length; i++){
-        if (categoryList[i] == nombre.toLowerCase()) {
-            alert("Categoria repetida")
-            return false;
-        };
-        
-    };
-
-    categoryList.push(nombre.toLowerCase());
+    }
+    if (categories.includes(normalized)) {
+        alert("Categoria repetida");
+        return false;
+    }
+    categories.push(normalized);
     return true;
-};
+}
